@@ -1,0 +1,58 @@
+pipeline {
+    agent any 
+    stages {        
+        stage("Download of Project") {
+            steps {
+                sh "git clone https://github.com/rafaelspaesleme-ads/webclient-register-conteinerdb.git"
+                sh "chmod -R 755 webclient-register-conteinerdb/"
+            }
+        }          
+        stage("Configuration DB") {
+            steps {
+                sh "cp webclient-register-conteinerdb/devops/app/scripts/configDB.sh webclient-register-conteinerdb/"
+                sh "chmod +x webclient-register-conteinerdb/configDB.sh"
+                sh "./webclient-register-conteinerdb/configDB.sh"
+            }
+        }        
+        stage("Builder of Project") {
+            steps {
+                sh "cp webclient-register-conteinerdb/devops/app/scripts/builderProject.sh webclient-register-conteinerdb/"
+                sh "chmod +x webclient-register-conteinerdb/builderProject.sh"
+                sh "./webclient-register-conteinerdb/builderProject.sh"
+            }
+        }        
+        stage("Create env of Project") {
+            steps {
+                sh "mkdir application"
+                sh "chmod -R 755 application/"
+                sh "cp -R webclient-register-conteinerdb/target application/"
+                sh "chmod -R 755 webclient-register-conteinerdb/"
+                sh "rm -R webclient-register-conteinerdb/"
+                sh "sshpass -p $PASSWORD_SERVER scp -r application/ $USER_SERVER@$HOST_SERVER:"
+            }
+        }
+        stage("Runner Project") {
+            steps {
+                sh "sshpass -p $PASSWORD_SERVER ssh $USER_SERVER@$HOST_SERVER 'java -jar application/target/webclient-0.0.1-SNAPSHOT.jar'"
+            }
+        }
+    }
+    post {
+        always {
+            echo "Executando retornos do job."
+        }
+        success {
+            echo "Ambiente criado com sucesso!"
+        }
+        failure {
+            echo "Erro ao criar ambiente. Consulte o log da console."
+        }
+        unstable {
+            echo "Este build demonstra instabilidade"
+        }
+        changed {
+            echo "Comandos alterados no pipeline... a verificar."
+            echo "Builder em falha recuperado com sucesso!"
+        }
+    }
+}

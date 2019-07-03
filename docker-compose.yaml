@@ -1,0 +1,22 @@
+--- 
+networks: 
+  netclient: 
+    driver: bridge
+services: 
+  postgres: 
+    build: devops/postgres/
+    name: $CONTEINER_JK
+    environment: 
+      - POSTGRES_DB=$DATABASE_JK
+      - POSTGRES_USER=$USERNAME_JK
+      - POSTGRES_PASSWORD=$PASSWORD_JK
+      - POSTGRES_TABLE=$TABLE_JK
+    networks:
+      - netclient
+    ports: 
+      - "${PORT_EXTERNAL}:5432"
+    volumes: 
+      - "db-data:/var/lib/postgresql/data/"
+version: "3"
+volumes: 
+  db-data: ~
