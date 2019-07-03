@@ -16,8 +16,8 @@ public class ClientResource {
 
     private final ClientService ClientService;
 
-    public ClientResource(ClientService ClientService) {
-        this.ClientService = ClientService;
+    public ClientResource(ClientService clientService) {
+        this.ClientService = clientService;
     }
 
     @RequestMapping(method = RequestMethod.POST)
