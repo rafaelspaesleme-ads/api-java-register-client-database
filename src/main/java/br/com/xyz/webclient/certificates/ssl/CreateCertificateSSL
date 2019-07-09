@@ -2,11 +2,21 @@
 
 # openssl req -x509 -sha256 -newkey rsa:2048 -keyout certificate.key -out certificate.crt -days 365 -nodes -subj '/CN=${SUBDOMAIN}${DOMAIN}'
 
-wget https://dl.eff.org/certbot-auto
-sudo mv certbot-auto /usr/local/bin/certbot-auto
-chown root /usr/local/bin/certbot-auto
-chmod 0755 /usr/local/bin/certbot-auto
+# wget https://dl.eff.org/certbot-auto
+# sudo mv certbot-auto /usr/local/bin/certbot-auto
+# chown root /usr/local/bin/certbot-auto
+# chmod 0755 /usr/local/bin/certbot-auto
 
-wget -N https://dl.eff.org/certbot-auto.asc
-gpg2 --keyserver pool.sks-keyservers.net --recv-key $MASTER_TOKEN
-gpg2 --trusted-key $KEY_0 --verify certbot-auto.asc /usr/local/bin/certbot-auto
+# wget -N https://dl.eff.org/certbot-auto.asc
+# gpg2 --keyserver pool.sks-keyservers.net --recv-key $MASTER_TOKEN
+# gpg2 --trusted-key $KEY_0 --verify certbot-auto.asc /usr/local/bin/certbot-auto
+
+# docker run --env HTTP_PROXY="<domain>:<port>"
+
+docker run -it --rm --name $NAME_CERTIF \
+            --env NO_PROXY="${SUBDOMAIN}.${DOMAIN},${DOMAIN}"
+            -v "/etc/letsencrypt:/etc/letsencrypt" \
+            -v "/var/lib/letsencrypt:/var/lib/letsencrypt" \
+            -p ${PORT_EXTERN_SRV}:80
+            -p 443:443
+            certbot/certbot certonly
