@@ -21,7 +21,7 @@ public class RegisterConteinerMicroservice {
 
     private void createConteiner(RegisterConteiner registerConteiner) {
 
-        String commandDocker = "docker run --name " + registerConteiner.getNameConteiner() + " -d -p " + registerConteiner.getPortConteiner() + ":5432 -e DB_NAME=" + registerConteiner.getNameDatabase() + " -e DB_USER=" + registerConteiner.getUsernameDatabase() + " -e DB_PASSWD=" + registerConteiner.getPasswordDatabase() + " rafaelspaesleme/imagedatabase:latest";
+        String commandDocker = "docker run -t --restart unless-stopped --name " + registerConteiner.getNameConteiner() + " -d -p " + registerConteiner.getPortConteiner() + ":5432 -e DB_NAME=" + registerConteiner.getNameDatabase() + " -e DB_USER=" + registerConteiner.getUsernameDatabase() + " -e DB_PASSWD=" + registerConteiner.getPasswordDatabase() + " rafaelspaesleme/imagedatabase:latest";
 
         String[] env = {"PATH=/bin:/usr/bin/"};
 
