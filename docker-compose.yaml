@@ -1,7 +1,8 @@
 --- 
 networks: 
   netclient: 
-    driver: bridge
+    driver: ${DOCKER_DRIVE_NETWORK}
+    name: ${NAME_NETWORK}
 services: 
   postgres: 
     build: devops/postgres/
@@ -14,7 +15,7 @@ services:
     networks:
       - netclient
     ports: 
-      - "${PORT_EXTERNAL}:5432"
+      - "${PORT_EXTERNAL}:${PORT_INTERNAL}"
     volumes: 
       - "db-data:/var/lib/postgresql/data/"
 version: "3"
