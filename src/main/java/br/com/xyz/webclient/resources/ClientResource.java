@@ -14,7 +14,7 @@ import java.net.URI;
 @RequestMapping(value = "/cliente")
 public class ClientResource {
 
-    private final ClientService ClientService;
+    private final ClientService clientService;
 
     public ClientResource(ClientService clientService) {
         this.ClientService = clientService;
