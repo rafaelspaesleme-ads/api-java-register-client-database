@@ -17,15 +17,15 @@ public class ClientResource {
     private final ClientService clientService;
 
     public ClientResource(ClientService clientService) {
-        this.ClientService = clientService;
+        this.clientService = clientService;
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> insert(@Valid @RequestBody ClientDTO clientDTO) {
-        Client client = ClientService.fromDTO(clientDTO);
+        Client client = clientService.fromDTO(clientDTO);
         System.out.println(clientDTO.getNameConteiner());
         System.out.println(client);
-        client = ClientService.insert(client);
+        client = clientService.insert(client);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(client.getId()).toUri();
         return ResponseEntity.created(uri).build();
@@ -33,12 +33,12 @@ public class ClientResource {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Void> disable(@Valid @RequestBody ClientDTO clientDTO, @PathVariable Long id) {
-        Client client = ClientService.fromDTO(clientDTO);
+        Client client = clientService.fromDTO(clientDTO);
         System.out.println("ID>>>>>> "+id);
         System.out.println("SITUACAO>>>>> "+client.getActive());
         System.out.println("NAME>>>>> "+client.getNameConteiner());
         client.setId(id);
-        ClientService.disable(client);
+        clientService.disable(client);
         return ResponseEntity.noContent().build();
     }
 
